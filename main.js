@@ -19,6 +19,15 @@ function caeser_shift(plain_text, amount) {
     return output;
 }
 
+function in_alphabet(phrase) {
+    for (var i = 0; i < phrase.length; i++) {
+        if(!(A.includes(phrase[i]))){
+            return false;
+        }
+    }
+    return true;
+}
+
 function vigenere_cipher(plain_text, key, isEncrypt) {
     var output = "";
     for (var i = 0; i < plain_text.length; i++) {
@@ -96,6 +105,16 @@ $(function() {
             return;
         }
 
+        if(!in_alphabet(plain_text) && $('#encrypt').is(':checked')) {
+            alert("Plaintext must be within cipher alphabet!");
+            return;
+        }                   
+        
+         if(!in_alphabet(cipher_text) && $('#decrypt').is(':checked')) {
+            alert("Ciphertext must be within cipher alphabet!");
+            return;
+        }           
+        
         if(cipher_type == 0 && $('#encrypt').is(':checked')) {
             cipher_text = caeser_shift(plain_text, extra_info)
             console.log("extra info" + extra_info);
@@ -114,11 +133,19 @@ $(function() {
             enc_data = {
                 'key':key
             };
+            if(!in_alphabet(key)){
+                alert("Key must be within the cipher alphabet!");
+                return;
+            }
             encrypted = true;
         } else if(cipher_type == 1 && $('#decrypt').is(':checked')) {
             var key = $('#vigenere-key').val();
             plain_text = vigenere_cipher(cipher_text, key, false);
             $('#cipher-plaintext').val(plain_text);
+            if(!in_alphabet(key)){
+                alert("Key must be within the cipher alphabet!");
+                return;
+            }            
             alert("Plaintext: " + plain_text);
         } else if(cipher_type == 2 && $('#encrypt').is(':checked')) {
             var multiplier = parseInt($('#affine-shift-multiply').val());
